@@ -57,6 +57,17 @@ html {
   animation: cart-pulse 0.6s ease-out;
 }
 
+.add-burst {
+  border-radius: inherit;
+  background: radial-gradient(circle at center, rgba(34, 197, 94, 0.35), rgba(34, 197, 94, 0) 65%);
+  animation: add-burst 0.7s ease-out;
+}
+
+.cart-toast {
+  pointer-events: none;
+  animation: cart-toast 1.2s ease-out both;
+}
+
 @keyframes cart-pulse {
   0% {
     transform: scale(1);
@@ -69,6 +80,40 @@ html {
   100% {
     transform: scale(1);
     box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+  }
+}
+
+@keyframes add-burst {
+  0% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  25% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+}
+
+@keyframes cart-toast {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.95);
+  }
+  20% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  70% {
+    opacity: 1;
+    transform: translateY(-2px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
   }
 }
 

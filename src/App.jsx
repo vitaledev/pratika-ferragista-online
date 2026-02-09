@@ -276,14 +276,37 @@ const parsePrice = (value) => {
 // --- COMPONENTE CARTÃO DE PRODUTO INDIVIDUAL ---
 const ProductCard = ({ product, onAddToCart, onBuyNow, large = false }) => {
   const [quantity, setQuantity] = useState(1);
+  const [showAddFeedback, setShowAddFeedback] = useState(false);
+  const [addFeedbackKey, setAddFeedbackKey] = useState(0);
+  const addFeedbackRef = useRef(null);
   const isPromo = product.oldPrice && product.oldPrice > product.price;
 
   const handleIncrement = () => setQuantity(prev => prev + 1);
   const handleDecrement = () => setQuantity(prev => (prev > 1 ? prev - 1 : 1));
 
+  useEffect(() => {
+    return () => {
+      if (addFeedbackRef.current) {
+        clearTimeout(addFeedbackRef.current);
+      }
+    };
+  }, []);
+
+  const triggerAddFeedback = () => {
+    setAddFeedbackKey(prev => prev + 1);
+    setShowAddFeedback(true);
+    if (addFeedbackRef.current) {
+      clearTimeout(addFeedbackRef.current);
+    }
+    addFeedbackRef.current = setTimeout(() => {
+      setShowAddFeedback(false);
+    }, 900);
+  };
+
   const handleAdd = () => {
     onAddToCart(product, quantity);
     setQuantity(1); // Reseta a quantidade após adicionar
+    triggerAddFeedback();
   };
 
   const handleBuy = () => {
@@ -356,9 +379,17 @@ const ProductCard = ({ product, onAddToCart, onBuyNow, large = false }) => {
                   <div className={`grid ${large ? 'grid-cols-2 gap-3' : 'grid-cols-1 gap-2'}`}>
                     <button 
                         onClick={handleAdd}
-                        className="w-full bg-blue-50 hover:bg-blue-100 text-[#003366] border border-blue-200 text-xs font-bold py-3 rounded flex items-center justify-center gap-2 transition"
+                        className="relative w-full bg-blue-50 hover:bg-blue-100 text-[#003366] border border-blue-200 text-xs font-bold py-3 rounded flex items-center justify-center gap-2 transition active:scale-[0.98] overflow-hidden"
                     >
-                        <ShoppingCart size={16} /> ADD SACOLA
+                        <span className={`relative z-10 flex items-center gap-2 transition-all ${showAddFeedback ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}>
+                          <ShoppingCart size={16} /> ADD SACOLA
+                        </span>
+                        <span className={`absolute inset-0 z-10 flex items-center justify-center gap-2 text-green-700 font-black text-[11px] transition-all ${showAddFeedback ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
+                          <CheckCircle size={16} /> ADICIONADO
+                        </span>
+                        {showAddFeedback && (
+                          <span key={addFeedbackKey} className="absolute inset-0 z-0 add-burst pointer-events-none" />
+                        )}
                     </button>
                     <button 
                         onClick={handleBuy}
@@ -386,6 +417,8 @@ const App = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [cartPulse, setCartPulse] = useState(false);
   const cartPulseRef = useRef(null);
+  const [cartToast, setCartToast] = useState(null);
+  const cartToastRef = useRef(null);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -398,6 +431,9 @@ const App = () => {
     return () => {
       if (cartPulseRef.current) {
         clearTimeout(cartPulseRef.current);
+      }
+      if (cartToastRef.current) {
+        clearTimeout(cartToastRef.current);
       }
     };
   }, []);
@@ -466,6 +502,14 @@ const App = () => {
       return [...prevCart, { ...product, quantity: quantity }];
     });
     setCartPulse(true);
+    const toastId = Date.now();
+    setCartToast({ id: toastId, quantity });
+    if (cartToastRef.current) {
+      clearTimeout(cartToastRef.current);
+    }
+    cartToastRef.current = setTimeout(() => {
+      setCartToast(null);
+    }, 1300);
     if (typeof window !== 'undefined' && window.matchMedia) {
       const isMobile = window.matchMedia('(max-width: 767px)').matches;
       if (isMobile) {
@@ -604,6 +648,14 @@ const App = () => {
                   aria-label="Abrir sacola"
                 >
                   <ShoppingCart size={22} strokeWidth={2.5}/>
+                  {cartToast && [cartToast].map((toast) => (
+                    <span
+                      key={`${toast.id}-mobile`}
+                      className="absolute -top-9 right-0 bg-white text-green-700 text-[10px] font-black px-2 py-1 rounded-full shadow-lg flex items-center gap-1 whitespace-nowrap cart-toast"
+                    >
+                      <CheckCircle size={12} /> +{toast.quantity} na sacola
+                    </span>
+                  ))}
                   {cartItemsCount > 0 && (
                     <span className="absolute -top-2 -right-2 bg-red-600 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-[#003366]">
                       {cartItemsCount}
@@ -643,6 +695,14 @@ const App = () => {
                 }`}
             >
                 <ShoppingCart size={24} strokeWidth={2.5}/>
+                {cartToast && [cartToast].map((toast) => (
+                  <span
+                    key={`${toast.id}-desktop`}
+                    className="absolute -top-8 right-1 bg-white text-green-700 text-[10px] font-black px-2 py-1 rounded-full shadow-lg flex items-center gap-1 whitespace-nowrap cart-toast"
+                  >
+                    <CheckCircle size={12} /> +{toast.quantity} na sacola
+                  </span>
+                ))}
                 {cartItemsCount > 0 && (
                   <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold w-6 h-6 flex items-center justify-center rounded-full border-2 border-[#003366]">
                     {cartItemsCount}
