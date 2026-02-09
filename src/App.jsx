@@ -572,7 +572,7 @@ const App = () => {
       </div>
 
       {/* --- HEADER --- */}
-      <header className="bg-[#003366] text-white sticky top-0 z-50 shadow-xl">
+      <header className="bg-[#003366] text-white sticky top-0 z-50 shadow-xl header-sticky">
         <div className="container mx-auto px-4 py-3 md:py-4">
           <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
             
