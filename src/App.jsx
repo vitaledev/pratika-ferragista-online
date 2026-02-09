@@ -165,6 +165,7 @@ const WHATSAPP_NUMBER =
   import.meta.env.VITE_WHATSAPP_NUMBER || "5562982055254"; 
 const WHATSAPP_ICON_URL =
   import.meta.env.VITE_WHATSAPP_ICON_URL || "https://i.imgur.com/GNj685k.png";
+const ASSET_BASE = import.meta.env.BASE_URL;
 
 // --- AJUSTES RÁPIDOS DA LOGO ---
 // Edite esses valores para ajustar tamanho/posição da logo no header e no rodapé.
@@ -518,6 +519,12 @@ const App = () => {
     setActiveCategory(catId);
     setSubCategoryFilter('');
     setSearchTerm('');
+    setTimeout(() => {
+      const section = document.getElementById('produtos');
+      if (section) {
+        section.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 50);
   };
 
   const handleSubCategoryClick = (keyword) => {
@@ -555,7 +562,7 @@ const App = () => {
                       style={buildLogoVars(LOGO_SETTINGS.header)}
                     >
                         <img 
-                          src="/logo-pratika.png" 
+                          src={`${ASSET_BASE}logo-pratika.png`} 
                           alt="Logo Prátika" 
                           className="logo-img"
                           style={buildLogoImgStyle(LOGO_SETTINGS.header)}
@@ -616,7 +623,7 @@ const App = () => {
                                 aria-pressed={activeCategory === cat.id}
                                 className={`flex items-center gap-2 px-4 py-3 text-xs font-bold uppercase tracking-wider rounded-t-lg transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400/80 focus-visible:ring-offset-2 focus-visible:ring-offset-[#002855] active:scale-95 ${
                                     activeCategory === cat.id 
-                                    ? 'text-yellow-300 bg-white/20 shadow-inner ring-1 ring-white/20'
+                                    ? 'text-[#003366] bg-yellow-300 shadow-md ring-2 ring-yellow-200/80'
                                     : 'text-white/80 hover:text-white hover:bg-white/10'
                                 }`}
                             >
@@ -653,7 +660,7 @@ const App = () => {
                                 onClick={() => {handleCategoryClick(cat.id); setIsMenuOpen(false)}}
                                 aria-pressed={activeCategory === cat.id}
                                 className={`flex items-center gap-3 px-4 py-2 rounded-lg text-sm font-bold uppercase text-left w-full transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/70 active:scale-[0.98] ${
-                                    activeCategory === cat.id ? 'bg-blue-50 text-blue-800 shadow-sm ring-1 ring-blue-100' : 'text-slate-600 hover:bg-slate-100'
+                                    activeCategory === cat.id ? 'bg-yellow-100 text-[#003366] shadow-sm ring-1 ring-yellow-200' : 'text-slate-600 hover:bg-slate-100'
                                 }`}
                             >
                                 {cat.icon}
@@ -943,7 +950,7 @@ const App = () => {
                       style={buildLogoVars(LOGO_SETTINGS.footer)}
                     >
                       <img
-                        src="/logo-pratika.png"
+                        src={`${ASSET_BASE}logo-pratika.png`}
                         className="logo-img"
                         style={buildLogoImgStyle(LOGO_SETTINGS.footer)}
                         alt="Logo"
@@ -984,7 +991,7 @@ const App = () => {
                 <h4 className="text-white font-bold mb-4 uppercase text-xs tracking-wider">Pagamento na Entrega</h4>
                 <div className="flex gap-4 items-center flex-wrap justify-center md:justify-start">
                     <div className="flex flex-col items-center text-white/80 hover:text-white transition">
-                        <img src="/pix-icon.png" className="h-8 w-8 object-contain" alt="Pix" />
+                        <img src={`${ASSET_BASE}pix-icon.png`} className="h-8 w-8 object-contain" alt="Pix" />
                         <span className="text-[10px] font-bold mt-1">Pix</span>
                     </div>
                     <div className="flex flex-col items-center text-white/80 hover:text-white transition">
