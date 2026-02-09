@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+html {
+  scroll-behavior: smooth;
+}
+
+@layer utilities {
+  .animate-in {
+    animation-duration: 0.3s;
+    animation-timing-function: ease-out;
+    animation-fill-mode: both;
+  }
+
+  .slide-in-from-right {
+    animation-name: slide-in-from-right;
+  }
+}
+
+.logo-wrap {
+  width: var(--logo-size);
+  height: var(--logo-size);
+  border: var(--logo-border) solid var(--logo-border-color);
+  border-radius: var(--logo-radius);
+  padding: var(--logo-padding);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (min-width: 768px) {
+  .logo-wrap {
+    width: var(--logo-size-md);
+    height: var(--logo-size-md);
+  }
+}
+
+.logo-img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+@keyframes slide-in-from-right {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
