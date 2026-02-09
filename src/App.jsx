@@ -1,5 +1,5 @@
 ﻿
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Phone, Search, Menu, X, Zap, Droplet, Hammer, Star, 
   CheckCircle, Loader2, AlertCircle, Truck, CreditCard, ShieldCheck, 
@@ -384,12 +384,22 @@ const App = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [cart, setCart] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [cartPulse, setCartPulse] = useState(false);
+  const cartPulseRef = useRef(null);
 
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % BANNER_SLIDES.length);
     }, 5000);
     return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (cartPulseRef.current) {
+        clearTimeout(cartPulseRef.current);
+      }
+    };
   }, []);
 
   const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % BANNER_SLIDES.length);
@@ -455,7 +465,13 @@ const App = () => {
       }
       return [...prevCart, { ...product, quantity: quantity }];
     });
-    setIsCartOpen(true); 
+    setCartPulse(true);
+    if (cartPulseRef.current) {
+      clearTimeout(cartPulseRef.current);
+    }
+    cartPulseRef.current = setTimeout(() => {
+      setCartPulse(false);
+    }, 600);
   };
 
   const removeFromCart = (productId) => {
@@ -595,7 +611,9 @@ const App = () => {
 
             <div 
                 onClick={() => setIsCartOpen(true)}
-                className="hidden md:flex items-center gap-2 cursor-pointer hover:scale-105 transition transform bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg relative"
+                className={`flex items-center gap-2 cursor-pointer transition transform bg-green-500 text-white px-3 py-2 sm:px-4 rounded-lg shadow-lg relative ${
+                  cartPulse ? 'cart-pulse' : 'hover:scale-105'
+                }`}
             >
                 <ShoppingCart size={24} strokeWidth={2.5}/>
                 {cartItemsCount > 0 && (
@@ -603,7 +621,7 @@ const App = () => {
                     {cartItemsCount}
                   </span>
                 )}
-                <div className="text-xs leading-tight font-bold">
+                <div className="hidden sm:block text-xs leading-tight font-bold">
                     <p>MEU PEDIDO</p>
                     <p>R$ {cartTotal.toFixed(2)}</p>
                 </div>
