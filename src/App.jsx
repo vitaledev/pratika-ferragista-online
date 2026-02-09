@@ -466,6 +466,12 @@ const App = () => {
       return [...prevCart, { ...product, quantity: quantity }];
     });
     setCartPulse(true);
+    if (typeof window !== 'undefined' && window.matchMedia) {
+      const isMobile = window.matchMedia('(max-width: 767px)').matches;
+      if (isMobile) {
+        setIsCartOpen(false);
+      }
+    }
     if (cartPulseRef.current) {
       clearTimeout(cartPulseRef.current);
     }
@@ -570,7 +576,7 @@ const App = () => {
         <div className="container mx-auto px-4 py-3 md:py-4">
           <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
             
-            {/* Logo e Nome */}
+            {/* Logo e Sacola (mobile) */}
             <div className="flex justify-between w-full md:w-auto items-center">
                 <div className="flex items-center gap-4 cursor-pointer group" onClick={() => window.scrollTo(0,0)}>
                     <div
@@ -589,29 +595,50 @@ const App = () => {
                         <p className="text-[10px] md:text-xs font-bold tracking-widest uppercase text-white/90 mt-1 ml-1">Ferragista Online</p>
                     </div>
                 </div>
-                <button className="md:hidden text-white" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-                    {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
+                <button
+                  type="button"
+                  onClick={() => setIsCartOpen(true)}
+                  className={`md:hidden relative bg-green-500 text-white p-2 rounded-full shadow-lg transition ${
+                    cartPulse ? 'cart-pulse' : 'active:scale-95'
+                  }`}
+                  aria-label="Abrir sacola"
+                >
+                  <ShoppingCart size={22} strokeWidth={2.5}/>
+                  {cartItemsCount > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-red-600 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-[#003366]">
+                      {cartItemsCount}
+                    </span>
+                  )}
                 </button>
             </div>
 
             <div className="flex-1 w-full max-w-lg mx-auto min-w-0">
-                <div className="flex">
-                    <input 
-                        type="text" 
-                        placeholder="O que sua obra precisa agora?" 
-                        className="w-full px-4 py-2 rounded-l-lg bg-white text-slate-900 placeholder-slate-400 focus:outline-none border-0 font-medium text-sm shadow-sm"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                    <button className="bg-green-600 hover:bg-green-700 text-white font-bold px-5 py-2 rounded-r-lg flex items-center gap-2 transition-colors">
-                        <Search size={18} />
+                <div className="flex items-center gap-2">
+                    <button
+                      className="md:hidden text-white bg-[#002855] px-3 py-2 rounded-lg"
+                      onClick={() => setIsMenuOpen(!isMenuOpen)}
+                      aria-label="Abrir menu"
+                    >
+                        {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
                     </button>
+                    <div className="flex flex-1">
+                        <input 
+                            type="text" 
+                            placeholder="O que sua obra precisa agora?" 
+                            className="w-full px-4 py-2 rounded-l-lg bg-white text-slate-900 placeholder-slate-400 focus:outline-none border-0 font-medium text-sm shadow-sm"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                        <button className="bg-green-600 hover:bg-green-700 text-white font-bold px-5 py-2 rounded-r-lg flex items-center gap-2 transition-colors">
+                            <Search size={18} />
+                        </button>
+                    </div>
                 </div>
             </div>
 
             <div 
                 onClick={() => setIsCartOpen(true)}
-                className={`flex items-center gap-2 cursor-pointer transition transform bg-green-500 text-white px-3 py-2 sm:px-4 rounded-lg shadow-lg relative ${
+                className={`hidden md:flex items-center gap-2 cursor-pointer transition transform bg-green-500 text-white px-3 py-2 sm:px-4 rounded-lg shadow-lg relative ${
                   cartPulse ? 'cart-pulse' : 'hover:scale-105'
                 }`}
             >
@@ -629,6 +656,7 @@ const App = () => {
 
           </div>
         </div>
+
 
         {/* --- MENU CATEGORIAS --- */}
         <div className="bg-[#002855] border-t border-white/10 hidden md:block pt-1 pb-1 relative z-40">
