@@ -162,7 +162,7 @@ const CATEGORIES = [
 ];
 
 const WHATSAPP_NUMBER =
-  import.meta.env.VITE_WHATSAPP_NUMBER || "5562982055254"; 
+  import.meta.env.VITE_WHATSAPP_NUMBER || "556294508898"; 
 const WHATSAPP_ICON_URL =
   import.meta.env.VITE_WHATSAPP_ICON_URL || "https://i.imgur.com/GNj685k.png";
 const ASSET_BASE = import.meta.env.BASE_URL;
@@ -1078,7 +1078,7 @@ const App = () => {
                 <ul className="space-y-2 text-xs">
                     <li className="flex items-center gap-2 justify-center md:justify-start">
                       <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" className="flex items-center gap-2 hover:text-green-400">
-                        <Phone size={14} className="text-yellow-400"/> (62) 98205-5254
+                        <Phone size={14} className="text-yellow-400"/> (62) 9450-8898
                       </a>
                     </li>
                     <li className="flex items-center gap-2 justify-center md:justify-start"><MapPin size={14} className="text-yellow-400"/> Goiânia - GO</li>
